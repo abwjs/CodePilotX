@@ -3,9 +3,15 @@ import { createRouter, createWebHistory } from 'vue-router'
 const router = createRouter({
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: () => import('@/views/HomeIndex.vue'),
+      path: '/user/register',
+      name: 'Register',
+      component: () => import('@/views/UserRegister.vue'),
+      children: []
+    },
+    {
+      path: '/user/login',
+      name: 'Login',
+      component: () => import('@/views/UserLogin.vue'),
       children: []
     },
   ],

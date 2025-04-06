@@ -14,6 +14,13 @@ export default defineConfig({
       },
     }),
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@use "@/styles/variable.scss";`
+      }
+    }
+  },
   resolve: {
     alias: {
       "@": resolve(__dirname, "./src"),

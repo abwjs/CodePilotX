@@ -5,9 +5,9 @@ import morgan from 'morgan'
 import cors from 'cors'
 import errorHandle from './middleware/error/handler'
 const app = express();
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3002
 
-app.use(express.urlencoded());//用来解析 x-www-form-urlencoded类型请求体
+app.use(express.urlencoded({ extended: true }));//用来解析 x-www-form-urlencoded类型请求体
 app.use(express.json());//用来解析 json类型请求体
 app.use(express.static('public'));
 //第三方日志中间件

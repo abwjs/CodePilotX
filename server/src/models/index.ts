@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import configObj from '../config/config.default'
 import User from './User'
+import emailModel from './VerificationCodeSchema'
 let {dbUrl} = configObj
 // 连接 mongoDB 数据库 connect() 返回一个状态待定（pending）的连接
 mongoose.connect(dbUrl);
@@ -19,6 +20,7 @@ db.once('open', function () {
 
 // 组织导出模型类 这个 schema 编译成一个 Model：
 export default{
-  User
+  User,
+  emailModel
 }
 

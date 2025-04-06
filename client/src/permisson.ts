@@ -6,9 +6,7 @@ router.beforeEach((to, from, next) => {
   NProgress.start();
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 router.afterEach((to, from, next) => {
-  console.log(to,from,next);
-  
   NProgress.done();
-  
 });
