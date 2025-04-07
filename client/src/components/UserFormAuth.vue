@@ -42,7 +42,6 @@ const router = useRouter()
   color: transparent;
 }
 
-// 样式规则
 .auth-container {
   @include flex-center(column);
   min-height: 100vh;

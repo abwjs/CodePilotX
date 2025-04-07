@@ -14,6 +14,11 @@ const router = createRouter({
       component: () => import('@/views/UserLogin.vue'),
       children: []
     },
+    {
+      path:'/',
+      name:'Home',
+      component:()=>import('@/views/EditorIndex.vue')
+    }
   ],
   history: createWebHistory()
 })
