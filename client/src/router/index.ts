@@ -1,7 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
- 
 const router = createRouter({
   routes: [
+  {
+    path:'/',
+    name:'Home',
+    component:()=>import('@/views/HomeIndex.vue')
+  },
     {
       path: '/user/register',
       name: 'Register',
@@ -14,11 +18,12 @@ const router = createRouter({
       component: () => import('@/views/UserLogin.vue'),
       children: []
     },
-    {
-      path:'/',
-      name:'Home',
-      component:()=>import('@/views/EditorIndex.vue')
-    }
+     {
+      path: '/document',
+      name: 'Document',
+      component: () => import('@/views/DocumentEditor.vue'),
+      children: []
+     }
   ],
   history: createWebHistory()
 })

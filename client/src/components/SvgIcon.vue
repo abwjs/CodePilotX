@@ -1,6 +1,6 @@
 <!-- 封装icon图标 -->
 <template>
-  <svg :class="svgClass" aria-hidden="true" :style="{ fill: color }"  >
+  <svg :class="svgClass" aria-hidden="true" :style="{ '--icon-fill': color }"  >
     <use :xlink:href="iconClassName" />
   </svg>
 </template>
@@ -40,5 +40,8 @@ const svgClass = computed(() => {
   height: 1.5rem;
   position: relative;
   vertical-align: -2px;
+  & :deep(use) {
+    fill: var(--icon-fill) !important;
+  }
 }
 </style>
