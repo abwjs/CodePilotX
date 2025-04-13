@@ -28,16 +28,19 @@ import { useRouter } from 'vue-router';
 const router = useRouter()
 let email = ref<string>('')
 let password = ref<string>('')
-const Login = async()=>{
-  if(!email.value || !password.value){
+const Login = async () => {
+  if (!email.value || !password.value) {
     alert('请正确输入')
-    return 
+    return
   }
-  try{
-    await reqLogin(email.value,password.value)
-    router.push('/home')
-  }catch(err){
+  try {
+    let {data} = await reqLogin(email.value, password.value)
+    console.log(data);
+    
+    router.push('/')
+  } catch (err) {
     console.log(err);
+    // console.log(err?.response.data.msg);
     
   }
 }
@@ -56,6 +59,7 @@ const Login = async()=>{
   background-clip: text;
   color: transparent;
 }
+
 .auth-form {
   &__group {
     margin-bottom: 1.5rem;
@@ -71,7 +75,7 @@ const Login = async()=>{
     padding: 0.875rem 1rem;
     border: 1px solid variable.$border-color;
     border-radius: variable.$sm;
-    background: variable.$primary-light-color;
+    background: variable.$white-color;
     color: variable.$text-color;
     transition: all 0.3s ease;
 
@@ -100,8 +104,8 @@ const Login = async()=>{
     @include flex-center;
     width: 100%;
     padding: 1rem;
-    background: linear-gradient(135deg, variable.$primary-color, variable.$secondary-color);
-    color: variable.$white-color;
+    background: linear-gradient(135deg, variable.$white-color, variable.$secondary-color);
+    color: variable.$text-color;
     border: none;
     border-radius: variable.$sm;
     font-weight: 500;
@@ -114,13 +118,13 @@ const Login = async()=>{
     }
   }
 }
+
 .auth-footer {
   text-align: center;
   margin-top: 1.5rem;
-  color: variable.$text-color;
 
   a {
-    color: variable.$primary-color;
+    color: variable.$primary-text-color;
     text-decoration: none;
     font-weight: 500;
 

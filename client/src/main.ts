@@ -7,9 +7,11 @@ import '@/styles/reset.scss'
 import '@/assets/iconfont/iconfont.js'
 import SvgIcon from '@/components/SvgIcon.vue'
 import Navigation from '@/components/Navigation.vue'
+import TopTIP from './components/TopTIP.vue'
 const app = createApp(App)
 app.component('SvgIcon', SvgIcon);
 app.component('NavIgation',Navigation)
+app.component('TopTIP',TopTIP)
 app.use(router)
 app.use(pinia)
 app.mount('#app')

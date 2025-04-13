@@ -1,6 +1,7 @@
 <template>
   <!-- 登录页面 -->
   <div class="auth-container">
+    <TopTIP color='rgb(239, 246, 255)'></TopTIP>
     <!-- 登录框 -->
     <div class="auth-container__card">
       <!-- 头部 -->
@@ -14,7 +15,8 @@
         <div class="social-media-account__h">社交账号</div>
         <div class="social-media-account__buttons">
           <img src="../assets/images/github.png" alt="" @click="router.push('https://github.com/abwjs/CodePilotX')">
-          <img src="../assets/images/csdn.png" alt="" @click="router.push('https://blog.csdn.net/2401_82604907?spm=1000.2115.3001.5343')">
+          <img src="../assets/images/csdn.png" alt=""
+            @click="router.push('https://blog.csdn.net/2401_82604907?spm=1000.2115.3001.5343')">
         </div>
       </div>
     </div>
@@ -35,21 +37,16 @@ const router = useRouter()
   justify-content: center;
 }
 
-@mixin text-gradient($from, $to) {
-  background: linear-gradient(135deg, $from, $to);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
+
 
 .auth-container {
   @include flex-center(column);
   min-height: 100vh;
+  background-color: variable.$background-color;
 
   &__card {
     width: 100%;
     max-width: 32rem;
-    background: variable.$white-color;
     border-radius: variable.$lg;
     box-shadow: variable.$shadow;
     padding: 2.5rem;
@@ -66,14 +63,14 @@ const router = useRouter()
   margin-bottom: 2.5rem;
 
   &__logo {
-    @include text-gradient(variable.$primary-color, variable.$secondary-color);
+    color: variable.$primary-text-color;
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 0.75rem;
   }
 
   &__subtitle {
-    color: variable.$text-color;
+    color: variable.$primary-text-color;
     font-size: 0.875rem;
   }
 }
@@ -101,7 +98,7 @@ const router = useRouter()
   }
 
   &__link {
-    color: variable.$primary-color;
+    color: variable.$text-color;
     text-decoration: none;
 
     &:hover {
@@ -156,6 +153,4 @@ const router = useRouter()
     }
   }
 }
-
-
 </style>

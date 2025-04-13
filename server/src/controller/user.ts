@@ -89,7 +89,12 @@ const login = async (
   });
 };
 
-// 获取当前用户
+//用户退出登录
+const logout = ()=>{
+
+}
+
+// 获取当前用户信息
 const getCurrentUser = async (
   req: Request,
   res: Response,
@@ -113,4 +118,4 @@ const updateCurrentUser = async (
   }
 };
 
-export default { register, login, getCurrentUser, updateCurrentUser };
+export default { register,logout, login, getCurrentUser, updateCurrentUser };

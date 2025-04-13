@@ -1,16 +1,23 @@
 <template>
   <div class="editor" v-if="editor" :style="{ width }">
-    <MenuBar class="editor-header" :editor="editor" />
-
     <editor-content class="editor-content" :editor="editor" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { onMounted,nextTick } from 'vue';
 import { useEditor, EditorContent } from '@tiptap/vue-3'
-import MenuBar from './MenuBar.vue';
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
+import Document from '@tiptap/extension-document'
+import Paragraph from '@tiptap/extension-paragraph'
+import Text from '@tiptap/extension-text'
+import Heading from '@tiptap/extension-heading'
+import Collaboration from '@tiptap/extension-collaboration'
+import * as Y from 'yjs'
+import mitts from '../utils/bus'
+import { TiptapCollabProvider } from '@hocuspocus/provider'
+const doc = new Y.Doc() // Initialize Y.Doc for shared editing
 defineProps<{
   width: string
 }>()
@@ -18,9 +25,33 @@ const editor = useEditor({
   content: '<p>I’m running Tiptap with vue-next. 🎉</p>',
   extensions: [
     StarterKit
-    , Highlight]
+    , Highlight,
+    Document,
+    Paragraph,
+    Text,
+    Highlight.configure({ multicolor: true }),
+    Heading.configure({
+          levels: [1, 2, 3],
+        }),
+        Collaboration.configure({
+        document: doc, // Configure Y.Doc for collaboration
+      }),
+  ]
 })
-
+nextTick(() => {
+  mitts.emit('event', editor)
+})
+// Connect to your Collaboration server
+  onMounted(() => {
+    const provider = new TiptapCollabProvider({
+      name: 'document.name', 
+      appId: 'JKVV01DK', 
+      token: 'notoken', 
+      document: doc,
+    })
+    console.log(provider);
+    
+  })
 </script>
 
 <style lang="scss" scoped>
@@ -32,7 +63,6 @@ const editor = useEditor({
   display: flex;
   flex-direction: column;
   height: 100%;
-
   color: #0d0d0d;
   background-color: #fff;
   border-radius: .75rem;
@@ -96,9 +126,6 @@ const editor = useEditor({
     }
   }
 
-  mark {
-    background-color: #faf594;
-  }
 
   img {
     max-width: 100%;

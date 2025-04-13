@@ -1,7 +1,7 @@
 <template>
   <div class="Chat">
     <div class="Chat__Content">
-      <li :class="['m', true ? 'qt' : 'admin']">
+      <li :class="['item', true ? 'others' : 'admin']">
         <div class="user">
           <p>user</p>
           <img src="../assets/images/github.png" alt="">
@@ -41,7 +41,6 @@
   border-radius: variable.$sm;
   z-index: 999;
   padding: 0.3rem 2%;
-  box-shadow: variable.$shadow;
   border: 0.1rem solid variable.$border-color;
 
   &::after {
@@ -68,7 +67,7 @@
 
     
 
-    .m {
+    .item {
       @include flex-center(row, space-between);
       column-gap: 0.5rem;
       min-height: 3rem;
@@ -130,7 +129,6 @@
       padding: 8px;
       cursor: pointer;
 
-      &:hover {}
     }
   }
 

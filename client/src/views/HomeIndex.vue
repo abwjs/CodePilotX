@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    <div :class="['AIDialogue',{'none':!founcs}]" >
+    <div :class="['AIDialogue', { 'none': !founcs }]">
       <AIInlineBox @none="none"></AIInlineBox>
     </div>
   </div>
@@ -46,7 +46,7 @@ import { ref } from 'vue';
 import AIInlineBox from '../components/AIInlineBox.vue';
 let founcs = ref<boolean>(true)
 
-const none = ()=>{
+const none = () => {
   founcs.value = false
 }
 </script>
@@ -67,6 +67,7 @@ const none = ()=>{
   width: 100%;
   background-color: variable.$background-color;
   padding: 1.5rem;
+  overflow: hidden;
 }
 
 main {
@@ -199,7 +200,8 @@ main {
   height: 100%;
   padding: 2rem 8rem;
 }
+
 .none {
-    display: none;
-  }
+  display: none;
+}
 </style>

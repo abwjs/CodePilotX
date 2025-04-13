@@ -1,6 +1,7 @@
 import request from '../utils/request'
 enum API {
   LOGIN_URL = '/api/users/login',
+  LOGOUT_URL = '/api/users/logout',
   REGISTER_URL = '/api/users/register',
   GETCODE_URL = '/api/email',
 }
@@ -15,3 +16,7 @@ export const reqRegister = (email:string, password:string, code:string)=>{
 //登录
 export const reqLogin = (email:string,password:string) => 
   request.post(API.LOGIN_URL,{email,password})
+
+export const reqLogout = (uid:string)=>
+  request.post(API.LOGOUT_URL,{uid})
+  

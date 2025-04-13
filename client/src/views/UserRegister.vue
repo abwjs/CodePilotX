@@ -9,7 +9,7 @@
         <div class="auth-form__group">
           <input type="text" class="auth-form__input Input_Id" placeholder="验证码" v-model="code">
           <button class="auth-form__id" :disabled="isDisabled" @click="sendCode()">{{ isDisabled ? `等待${num}秒` : '发送验证码'
-            }}</button>
+          }}</button>
         </div>
         <div class="auth-form__group">
           <input type="password" class="auth-form__input" placeholder="密码" v-model="password">
@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import UserFormAuth from '../components/UserFormAuth.vue'
-import { reqCode ,reqRegister} from '../api/User'
+import { reqCode, reqRegister } from '../api/User'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 // 控制验证码发送
@@ -42,17 +42,18 @@ let email = ref<string>()
 let password = ref<string>()
 let code = ref<string>()
 // 发送验证码函数
-const sendCode =async () => {
-  if(!email.value) {
+const sendCode = async () => {
+  if (!email.value) {
     alert('没有邮箱')
     return
   }
-  try{
-  await reqCode(email.value)}catch(err){
+  try {
+    await reqCode(email.value)
+  } catch (err) {
     console.log(err);
     alert(err)
   }
-  
+
   isDisabled.value = true
   let time = setInterval(() => {
     if (num.value === 1) {
@@ -65,17 +66,17 @@ const sendCode =async () => {
 }
 
 // 注册函数
-const Register = async ()=>{
-  
-  if(!email.value||!password.value||!code.value) {
+const Register = async () => {
+
+  if (!email.value || !password.value || !code.value) {
     alert('请检查是否有输入')
     return
   }
-  try{
-  await reqRegister(email.value,password.value,code.value)
-  router.push('/user/login')
-}
-  catch(err){
+  try {
+    await reqRegister(email.value, password.value, code.value)
+    router.push('/user/login')
+  }
+  catch (err) {
     console.log(err);
     alert(err)
   }
@@ -89,12 +90,8 @@ const Register = async ()=>{
   justify-content: center;
 }
 
-@mixin text-gradient($from, $to) {
-  background: linear-gradient(135deg, $from, $to);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
+
+
 .auth-form {
   &__group {
     margin-bottom: 1.5rem;
@@ -122,13 +119,13 @@ const Register = async ()=>{
     cursor: pointer;
     transition: all 0.3s ease;
   }
-  
+
   &__input {
     width: 100%;
     padding: 0.875rem 1rem;
     border: 1px solid variable.$border-color;
     border-radius: variable.$sm;
-    background: variable.$primary-light-color;
+    background: variable.$white-color;
     color: variable.$text-color;
     transition: all 0.3s ease;
 
@@ -162,8 +159,8 @@ const Register = async ()=>{
     @include flex-center;
     width: 100%;
     padding: 1rem;
-    background: linear-gradient(135deg, variable.$primary-color, variable.$secondary-color);
-    color: variable.$white-color;
+    background: linear-gradient(135deg, variable.$white-color, variable.$secondary-color);
+    color: variable.$text-color;
     border: none;
     border-radius: variable.$sm;
     font-weight: 500;
@@ -176,16 +173,17 @@ const Register = async ()=>{
     }
   }
 }
+
 .auth-footer {
   text-align: center;
   margin-top: 1.5rem;
   color: variable.$text-color;
 
   a {
-    color: variable.$primary-color;
+    color: variable.$primary-text-color;
     text-decoration: none;
     font-weight: 500;
-
+    
     &:hover {
       text-decoration: underline;
     }

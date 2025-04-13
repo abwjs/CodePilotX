@@ -1,6 +1,13 @@
 <template>
   <div class="documentEditor">
-    <div class="AddressBook">
+    <nav>
+      <div class="header">
+
+      </div>
+      <MenuBar class="editor-header" />
+    </nav>
+    <main>
+      <div class="AddressBook">
       <!-- 聊天框组件 -->
       <DragdropChat></DragdropChat>
     </div>
@@ -12,17 +19,20 @@
       <!-- ai对话框组件 -->
       <AIInlineBox></AIInlineBox>
     </div>
-    <div class="nav">
-      <div class="nav__AI">AI助手</div>
-      <div class="nav__Chat">...</div>
+    </main>
+    <div class="FloatingOptions">
+      <div class="FloatingOptions__AI">AI助手</div>
+      <div class="FloatingOptions__Chat">...</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import MenuBar from '../components/MenuBar.vue';
 import TipTap from '../components/TipTap.vue'
 import AIInlineBox from '../components/AIInlineBox.vue'
 import DragdropChat from '../components/DragdropChat.vue';
+
 </script>
 <style lang="scss">
 @mixin flex-center($direction: row, $justify: center) {
@@ -33,34 +43,52 @@ import DragdropChat from '../components/DragdropChat.vue';
 }
 
 .documentEditor {
-  @include flex-center(row, space-between);
-  height: 100vh;
+  @include flex-center(column, space-between);
+  min-height: 100vh;
+  overflow: visible;
   width: 100%;
-  max-width: 100vw;
   padding: 0 0.3rem;
-  padding-top: 4rem;
   background-color: variable.$background-color;
 }
 
+nav {
+  display: sticky;
+  top: 0;
+  width: 100%;
+  height: 7.5rem;
+  z-index: 100;      /* 确保在顶部 */
+  background-color: variable.$white-color;
+  border-bottom: 2px solid variable.$bold-color;
+  .header {
+    width: 100%;
+    height: 3rem;
+    border-bottom: 2px solid variable.$bold-color;
+  }
+}
+
+main {
+  margin-top: 1rem;
+  display: flex;
+  width: 100%;
+  flex: 1;
+}
+
 .AddressBook {
-  height: 98%;
-  width: 22rem;
+  width: 18rem;
 }
 
 .AIBox {
-  height: 98%;
-  width: 22rem;
+  width: 18rem;
 }
 
 .document {
-  flex: 1;
-  height: 98%;
+  width: calc(100% - 36.6rem);
   background-color: variable.$white-color;
   margin: 0 0.3rem;
-  box-shadow: variable.$shadow;
+  border: 2px solid variable.$bold-color;
 }
 
-.nav {
+.FloatingOptions {
   @include flex-center(column, space-between);
   position: absolute;
   right: 1.5rem;
