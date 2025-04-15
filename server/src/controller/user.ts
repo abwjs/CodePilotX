@@ -1,9 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import ModelObj from "../models/index";
-import jwt from "jsonwebtoken";
-import confing from "../config/config.default";
-import md5 from "../utils/md5";
-let { jwtSecret } = confing;
+import { setToken } from "../utils/jwt";
 let { User, emailModel } = ModelObj;
 // 用户注册
 const register = async (
@@ -39,7 +36,7 @@ const register = async (
       res.status(400).json({ code: 400, msg: '用户已存在' });
     }
 
-    await User.create({ email, password});
+    await User.create({ email, password,username:'新用户'});
 
     // 删除已使用的验证码
     await emailModel.deleteOne({ email });
@@ -60,7 +57,7 @@ const login = async (
 ) => {
   let { email, password } = req.body;
   // 通过username和password查找用户信息
-  User.findOne({ email,password }).then((r) => {
+  User.findOne({ email,password }).then(async (r) => {
     //没有查找到
     if (r == null) {
       console.log(r);
@@ -69,13 +66,9 @@ const login = async (
         msg: "登录失败",
       });
     } else {
-      console.log(r);
-      // 如果登录成功 返回jwt  ，并且在token 中存入邮箱
-      // 生成的token 的时候需要作者id 存入，下次请求的时候我们知道作者是谁
-      let token = jwt.sign({ email, uid: r._id }, jwtSecret, {
-        expiresIn: "365d",
-        algorithm: "HS256",
-      });
+      // 如果登录成功 返回jwt
+      let token = await setToken(email, r._id)
+    
       res.json({
         code: 1,
         msg: "登录成功",
@@ -101,6 +94,7 @@ const getCurrentUser = async (
   next: NextFunction
 ) => {
   try {
+    let {} = req.body
   } catch (error) {
     next(error);
   }

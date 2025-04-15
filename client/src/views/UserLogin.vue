@@ -21,10 +21,11 @@
 </template>
 
 <script setup lang="ts">
-import { reqLogin } from '../api/User';
 import UserFormAuth from '../components/UserFormAuth.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '../stores/modules/user';
+const UserStore = useUserStore()
 const router = useRouter()
 let email = ref<string>('')
 let password = ref<string>('')
@@ -34,14 +35,12 @@ const Login = async () => {
     return
   }
   try {
-    let {data} = await reqLogin(email.value, password.value)
-    console.log(data);
-    
+    let data = { email: email.value, password: password.value }
+    await UserStore.login(data)
     router.push('/')
   } catch (err) {
     console.log(err);
     // console.log(err?.response.data.msg);
-    
   }
 }
 </script>

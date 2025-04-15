@@ -17,8 +17,8 @@
     </main>
     <div class="select">
       <div class="select__user">
-        <img src="../assets/images/csdn.png" class="select__user" alt="">
-        <h2>UserForm</h2>
+        <img :src="user.avatar" class="select__user" alt="">
+        <h2>{{ user.name }}</h2>
       </div>
       <div class="select__Input">
         <input type="text" placeholder="搜索..." class="search-input">
@@ -42,13 +42,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import { useUserStore } from '../stores/modules/user';
 import AIInlineBox from '../components/AIInlineBox.vue';
+const UserStore = useUserStore()
 let founcs = ref<boolean>(true)
-
+let user = computed(() => {
+  return {
+    name: UserStore.username || '未登录用户',
+    bio: UserStore.bio || '暂无简介',
+    uid: UserStore.uid || '',
+    avatar: UserStore.image || '/default-avatar.png'
+  }
+})
 const none = () => {
   founcs.value = false
 }
+onMounted(async() => {
+  if (UserStore.token) {
+    //获取用户信息
+    // await UserStore.fetchUserInfo()
+  }
+})
 </script>
 
 <style scoped lang="scss">

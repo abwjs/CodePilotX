@@ -11,12 +11,12 @@ const {login,logout,register,getCurrentUser,updateCurrentUser} = user
 router.post('/users/register',register)
 // 用户登录
 router.post('/users/login',login)
-router.post('/user/logout',logout)
+//退出登录
+router.post('/users/logout',logout)
 // 发送邮箱验证码
 router.post('/email',EmailSend)
-
 // 获取当前登录用户
-router.get('/user',getCurrentUser)
+router.get('/users',getCurrentUser)
 // 更新当前登录用户
-router.put('/user',updateCurrentUser)
+router.put('/users',updateCurrentUser)
 export default router;
