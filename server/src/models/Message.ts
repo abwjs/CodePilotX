@@ -12,7 +12,7 @@ const MessageSchema = new mongoose.Schema({
   content: { type: String, required: true },
 },
 {
-  //时间戳
+  //时间戳自动添加 createdAt 和 updatedAt 时间戳
   timestamps: true,
 })
 const MessageModel = mongoose.model('Message', MessageSchema)

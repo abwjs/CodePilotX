@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
-import configObj from '../config/config.default'
+import {dbUrl} from '../config/config.default'
 import User from './User'
 import emailModel from './VerificationCodeSchema'
 import MessageModel from "./Message";
 import GroupsModel from './Groups'
-let {dbUrl} = configObj
 // 连接 mongoDB 数据库 connect() 返回一个状态待定（pending）的连接
 mongoose.connect(dbUrl);
 
