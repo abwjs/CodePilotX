@@ -22,7 +22,7 @@ const register = async (
   let password = req.body.password;
   if (!email || !code || !password) {
     res.status(400).json({ code: 400, msg: "参数不完整" });
-    return
+    return;
   }
   try {
     // 验证验证码
@@ -33,19 +33,18 @@ const register = async (
     //判断用户是否存在
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      res.status(400).json({ code: 400, msg: '用户已存在' });
+      res.status(400).json({ code: 400, msg: "用户已存在" });
     }
 
-    await User.create({ email, password,username:'新用户'});
+    await User.create({ email, password, username: "新用户" });
 
     // 删除已使用的验证码
     await emailModel.deleteOne({ email });
 
-    res.json({ code: 200, msg: '注册成功' });
-
+    res.json({ code: 200, msg: "注册成功" });
   } catch (err) {
-    console.error('注册失败:', err);
-    res.status(500).json({ code: 500, msg: '注册失败' });
+    console.error("注册失败:", err);
+    res.status(500).json({ code: 500, msg: "注册失败" });
   }
 };
 
@@ -57,7 +56,7 @@ const login = async (
 ) => {
   let { email, password } = req.body;
   // 通过username和password查找用户信息
-  User.findOne({ email,password }).then(async (r) => {
+  User.findOne({ email, password }).then(async (r) => {
     //没有查找到
     if (r == null) {
       console.log(r);
@@ -67,14 +66,13 @@ const login = async (
       });
     } else {
       // 如果登录成功 返回jwt
-      let token = await setToken(email, r._id)
-    
+      let token = await setToken(email, r._id);
       res.json({
         code: 1,
         msg: "登录成功",
         token,
         uid: r._id,
-        username:r.username,
+        username: r.username,
         image: r.image,
         bio: r.bio,
       });
@@ -83,9 +81,7 @@ const login = async (
 };
 
 //用户退出登录
-const logout = ()=>{
-
-}
+const logout = () => {};
 
 // 获取当前用户信息
 const getCurrentUser = async (
@@ -94,22 +90,49 @@ const getCurrentUser = async (
   next: NextFunction
 ) => {
   try {
-    let {} = req.body
+    let {} = req.body;
   } catch (error) {
     next(error);
   }
 };
 
-// 更新当前用户
-const updateCurrentUser = async (
+//上传头像
+const uploadAvatar = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-  } catch (error) {
-    next(error);
+    if (!req.file) {
+      res.status(400).json({ message: "请选择要上传的文件" });
+      return
+    }
+
+    // 更新用户头像路径
+    const user = await User.findByIdAndUpdate(
+      req.params.userId,
+      { avatar: req.file.path }, // 存储相对路径
+      { new: true }
+    );
+
+    if (!user) {
+      res.status(404).json({ message: "用户不存在" });
+    }
+
+    res.json({
+      message: "头像上传成功",
+      avatarPath: `/avatars/${req.file.filename}`, // 返回访问路径
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "服务器错误" });
   }
 };
 
-export default { register,logout, login, getCurrentUser, updateCurrentUser };
+export default {
+  register,
+  logout,
+  login,
+  uploadAvatar,
+  getCurrentUser,
+};

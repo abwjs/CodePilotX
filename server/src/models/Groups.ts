@@ -11,13 +11,16 @@ const GroupsSchema = new mongoose.Schema({
     default: {}
   },
   //协同用户 
-  collaborators: {
-    type:Array<String>
-  },
-  //创建者
+  collaborators: [{
+    type: mongoose.Schema.Types.ObjectId,  // 使用ObjectId类型
+    ref: 'User',  // 关联用户模型
+    default:[]
+  }],
+  //创建者id
   creator: {
-    type:String,
-    required:true
+    type: [mongoose.Schema.Types.ObjectId], // 明确字段是 ObjectId 数组
+    ref: 'User',                           // 引用 User 模型
+    default: []                            // 字段默认值为空数组
   },
   //websocket会话id
   wsSessionId:{

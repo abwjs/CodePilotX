@@ -20,7 +20,6 @@
       <div class="navigation__social">
         <img src="../assets/images/github.png" alt="">
         <img src="../assets/images/csdn.png" alt="">
-
       </div>
     </nav>
 </template>

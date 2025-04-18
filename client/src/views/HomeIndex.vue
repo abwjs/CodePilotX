@@ -2,14 +2,9 @@
   <div class="Home">
     <NavIgation></NavIgation>
     <main>
-      <h1>CodePilotX
-      </h1>
-      <div class="function">
-        <div class="function__personal"></div>
-        <div class="function__team"></div>
-        <div class="function__ai"></div>
-        <div class="function__ai"></div>
-        <div class="function__ai"></div>
+      <div class="title">
+        <h1>AI-driven collaboration for seamless teamwork.
+        </h1>
       </div>
       <div class="introduce">
         <div class="introduce__personal" v-for="item in 4" :key="item"></div>
@@ -46,7 +41,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useUserStore } from '../stores/modules/user';
 import AIInlineBox from '../components/AIInlineBox.vue';
 const UserStore = useUserStore()
-let founcs = ref<boolean>(true)
+let founcs = ref<boolean>(false)
 let user = computed(() => {
   return {
     name: UserStore.username || '未登录用户',
@@ -58,7 +53,7 @@ let user = computed(() => {
 const none = () => {
   founcs.value = false
 }
-onMounted(async() => {
+onMounted(async () => {
   if (UserStore.token) {
     //获取用户信息
     // await UserStore.fetchUserInfo()
@@ -90,31 +85,20 @@ main {
   height: 100%;
   padding: 1rem 3rem;
 
-  h1 {
-    font-weight: 700;
-    font-size: 3rem;
-  }
+  .title {
+    max-width: 50rem;
 
-  .function {
-    @include flex-center();
-    margin-top: 3rem;
-    width: 100%;
-    height: 1.8rem;
-
-    div {
-      width: 8rem;
-      background-color: variable.$primary-color;
-      height: 2.8rem;
-      border-radius: 1.4rem;
-      box-shadow: variable.$shadow;
-
+    h1 {
+      white-space: inherit;
+      font-weight: 700;
+      font-size: 3.5rem;
     }
   }
 
   .introduce {
     @include flex-center();
     flex-wrap: wrap;
-    margin-top: 6rem;
+    margin-top: 4rem;
     width: 100%;
     flex: 1;
     gap: 2rem;
@@ -125,6 +109,49 @@ main {
       width: 22rem;
       height: 12rem;
       border-radius: variable.$lg;
+      transition: transform 0.3s ease;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(179, 213, 255, 0.3);
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg,
+            rgba(179, 213, 255, 0) 40%,
+            rgba(255, 255, 255, 0.8) 50%,
+            rgba(179, 213, 255, 0) 60%);
+        background-size: 200% 200%;
+        opacity: 0;
+        transition: opacity 0.3s;
+        animation: borderFlow 2.5s linear infinite;
+      }
+
+      @keyframes borderFlow {
+        0% {
+          background-position: 100% 100%;
+        }
+        50% {
+          background-position: 0% 0%;
+        }
+        100% {
+          background-position: 100% 100%;
+
+        }
+      }
+
+      &:hover::before {
+        opacity: 1;
+      }
+
+      &:hover {
+        transform: translateY(-4px);
+      }
+
     }
   }
 }

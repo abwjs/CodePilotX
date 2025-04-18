@@ -7,11 +7,13 @@ import {jwtSecret} from './config/config.default'
 import {expressjwt} from 'express-jwt'
 import errorHandle from './middleware/error/handler'
 const app = express();
-const PORT = process.env.PORT || 3007
+const PORT = process.env.PORT || 3010
 
 app.use(express.urlencoded({ extended: true }));//用来解析 x-www-form-urlencoded类型请求体
 app.use(express.json());//用来解析 json类型请求体
-app.use(express.static('public'));
+//静态资源中间件
+app.use('/default-avatar', express.static('public/images/default-avater.jpg'));
+app.use('/avatars', express.static('uploads/avatars')); // 用户上传头像
 //第三方日志中间件
 app.use(morgan('dev'))
 //第三方跨域中间件
@@ -22,7 +24,7 @@ app.use(expressjwt({
   secret: jwtSecret,
   algorithms: ['HS256']
 }).unless({
-  path: ['/api/users/login','/api/users/register']//除了这些地址，其他的URL都需要验证
+  path: ['/api/users/login','/api/email','/api/users/register']//除了这些地址，其他的URL都需要验证
 }));
 
 // 错误处理中间件
