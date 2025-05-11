@@ -47,8 +47,9 @@ const router = useRouter()
   &__card {
     width: 100%;
     max-width: 32rem;
+    background-color: variable.$primary-color;
+
     border-radius: variable.$lg;
-    box-shadow: variable.$shadow;
     padding: 2.5rem;
     transition: transform 0.3s ease;
 

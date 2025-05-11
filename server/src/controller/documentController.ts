@@ -1,8 +1,9 @@
 import { Response, Request, NextFunction } from "express";
-import mongoose from "mongoose";
 import GroupsModel from "../models/Groups";
 import MessageModel from "../models/Message";
 import User from "../models/User";
+import * as Y from "yjs";
+const PORT = process.env.PORTs || 3012;
 //创建文档
 export const createDocument = async (
   req: Request,
@@ -18,10 +19,15 @@ export const createDocument = async (
       msg: "创建者不存在",
     });
   }
+  // 初始化 Yjs 文档
+  const ydoc = new Y.Doc();
+  const initialUpdate = Y.encodeStateAsUpdate(ydoc);
+
   try {
     const newDa = await GroupsModel.create({
-      collaborators: [creator],
+      collaborators: [],
       creator,
+      content: Buffer.from(initialUpdate),
     });
     res.status(200).json({
       code: 1,
@@ -44,7 +50,7 @@ export const getDocument = async (
 ) => {
   let { docId } = req.params;
   try {
-    let ret = await GroupsModel.findById(docId);
+    let ret = await GroupsModel.findById(docId).select("-content");
     res.status(200).json({
       code: 1,
       msg: "获取成功",
@@ -92,35 +98,6 @@ export const updateTitle = async (
     res.status(400).json({
       code: 0,
       msg: "修改失败",
-    });
-  }
-};
-
-//更新文档内容
-export const updateContent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  //获取文档的内容和id
-  let { content, docId } = req.body;
-  if (!content || !docId) {
-    res.status(404).json({
-      code: 0,
-      msg: "参数错误",
-    });
-  }
-  try {
-    //根据id更新文档内容
-    await GroupsModel.findByIdAndUpdate(docId, { content });
-    res.status(200).json({
-      code: 0,
-      msg: "更新成功",
-    });
-  } catch (err) {
-    res.status(400).json({
-      code: 0,
-      msg: "失败",
     });
   }
 };
@@ -174,9 +151,9 @@ export const removeCollaborator = async (
   //判断用户是协作者吗
   const doc = await GroupsModel.findOne({
     _id: docId,
-    collaborators: userId
+    collaborators: userId,
   });
-  if(!doc) {
+  if (!doc) {
     res.status(400).json({
       code: 0,
       msg: "该用户不是文档协作者",
@@ -189,12 +166,12 @@ export const removeCollaborator = async (
       {
         $pull: { collaborators: userId }, // 从数组中移除指定用户
       },
-      { new: true } 
+      { new: true }
     );
     res.status(200).json({
-      code:1,
-      msg:'退出成功'
-    })
+      code: 1,
+      msg: "退出成功",
+    });
   } catch (err) {
     res.status(400).json({
       code: 0,
@@ -224,5 +201,59 @@ export const removeDocument = async (
       code: 0,
       msg: err,
     });
+  }
+};
+
+//获取文档列表
+export const getFullDocumentList = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { currentUserId, type } = req.query;
+    // 构建查询条件
+    const query: any = {
+      $or: [],
+    };
+    switch (type) {
+      case "all":
+        query.$or.push(
+          { creator: currentUserId },
+          { collaborators: currentUserId }
+        );
+        break;
+      case "created":
+        query.$or.push({ creator: currentUserId });
+        break;
+      case "collaborated":
+        query.$or.push({ collaborators: currentUserId });
+        break;
+      default:
+        res.status(404).json({
+          code: 0,
+          msg: "参数错误",
+        });
+    }
+    const docs = await GroupsModel.find(query)
+      .select("_id title updatedAt createdAt creator collaborators content") // 精确控制返回字段
+      .populate("creator", "username image") // 只取必要用户信息
+      .populate("collaborators", "username image")
+      .sort({ updatedAt: -1 })
+      .lean();
+    // 格式化协同者的头像路径
+    docs.forEach((item) => {
+      item.collaborators.map((i: any) => {
+        i.image = `http://localhost:${PORT}${i.image}`;
+        return i;
+      });
+    });
+    res.status(200).json({
+      code: 1,
+      msg: "获取成功",
+      data: docs,
+    });
+  } catch (err) {
+    next(err);
   }
 };

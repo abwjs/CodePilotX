@@ -21,15 +21,19 @@
       <button class="search-container__button">
       </button>
     </div>
-    <span @click="none">X</span>
+    <span @click="close" class="Close">X</span>
   </div>
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits<{ none: [void] }>()
-const none = () => {
-  emit('none')
+const emit = defineEmits<{ closeAI: [void] }>()
+const props = defineProps<{
+  Inputvalue?: string
+}>()
+const close = () => {
+  emit('closeAI')
 }
+console.log(props.Inputvalue);
 </script>
 
 <style scoped lang="scss">
@@ -46,7 +50,7 @@ const none = () => {
 .AIInlineBox {
   @include flex-center(column, space-between);
   position: relative;
-  background-color: variable.$primary-color;
+  background-color: variable.$background-color;
   width: 100%;
   height: 100%;
   border-radius: variable.$sm;
@@ -72,7 +76,6 @@ const none = () => {
     /* firefox */
     -ms-overflow-style: none;
 
-    /* IE 10+ */
     // 每个消息项  
     .item {
       @include flex-center(row, space-between);
@@ -96,7 +99,7 @@ const none = () => {
         flex: 1;
         height: 100%;
         border-radius: variable.$sm;
-        background: rgb(249, 248, 246);
+        background-color: variable.$primary-color;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       }
     }
@@ -146,7 +149,7 @@ const none = () => {
     }
   }
 
-  span {
+  .Close {
     position: absolute;
     right: 2%;
     top: 0.5rem;

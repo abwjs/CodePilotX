@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
     //头像
     image: {
       type: String,
-      default: '/default-avater.jpg',
+      default: '/default-image.jpg',
     },
   },
   {

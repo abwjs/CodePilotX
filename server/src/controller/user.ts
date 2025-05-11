@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import ModelObj from "../models/index";
 import { setToken } from "../utils/jwt";
 let { User, emailModel } = ModelObj;
+const PORT = process.env.PORTs || 3012;
+
 // 用户注册
 const register = async (
   req: Request<
@@ -67,14 +69,11 @@ const login = async (
     } else {
       // 如果登录成功 返回jwt
       let token = await setToken(email, r._id);
-      res.json({
+      res.status(201).json({
         code: 1,
-        msg: "登录成功",
+        msg: "登陆成功",
         token,
-        uid: r._id,
-        username: r.username,
-        image: r.image,
-        bio: r.bio,
+        ...formatUserResponse(r),
       });
     }
   });
@@ -105,30 +104,35 @@ const uploadAvatar = async (
   try {
     if (!req.file) {
       res.status(400).json({ message: "请选择要上传的文件" });
-      return
+      return;
     }
 
-    // 更新用户头像路径
-    const user = await User.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
-      { avatar: req.file.path }, // 存储相对路径
+      { image: `/images/${req.file.filename}` },
       { new: true }
     );
 
-    if (!user) {
-      res.status(404).json({ message: "用户不存在" });
-    }
-
-    res.json({
-      message: "头像上传成功",
-      avatarPath: `/avatars/${req.file.filename}`, // 返回访问路径
+    res.status(200).json({
+      code: 1,
+      msg: "上传成功",
+      ...formatUserResponse(updatedUser),
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "服务器错误" });
+    res.status(500).json({ error: "图片上传失败" });
   }
 };
 
+// 格式化响应
+function formatUserResponse(user: any) {
+  return {
+    id: user._id,
+    username: user.username,
+    image: `http://localhost:${PORT}${user.image}`, // 拼接完整URL
+    createdAt: user.createdAt,
+    bio: user.bio,
+  };
+}
 export default {
   register,
   logout,

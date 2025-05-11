@@ -1,31 +1,31 @@
 <template>
     <nav class="navigation">
+      <!-- logo -->
       <div class="navigation__logo">
-        <img src="../assets/images/csdn.png" alt="">
+        <h2>CodePilotX</h2>
       </div>
-      <div class="navigation__main">
-        <RouterLink class="li-home"  v-slot="{ isActive }" to="/" activeClass="active">
-          <svg-icon iconName="icon-shouye-zhihui" :color="isActive ? 'pink' : '#666'"></svg-icon>
-        </RouterLink>
-        <RouterLink class="li-ai" to="">
-          <svg-icon iconName="icon-shouye-zhihui"></svg-icon>
-        </RouterLink>
-        <RouterLink class="li-PersonalCenter" to="">
-          <svg-icon iconName="icon-shouye-zhihui"></svg-icon>
-        </RouterLink>
-        <RouterLink class="settings" to="">
-          <svg-icon iconName="icon-shouye-zhihui"></svg-icon>
-        </RouterLink>
-      </div>
-      <div class="navigation__social">
+      <!-- 用户 -->
+      <div class="navigation__user">
         <img src="../assets/images/github.png" alt="">
-        <img src="../assets/images/csdn.png" alt="">
+        <img @click="router.push('/home/userIndex')" :src="user.avatar" class="select__user" alt="">
       </div>
     </nav>
 </template>
 
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
+import { computed } from 'vue';
+import { useUserStore } from '../stores/modules/user';
+import { useRouter } from 'vue-router';
+const UserStore = useUserStore()
+const router = useRouter()
+let user = computed(() => {
+  return {
+    name: UserStore.username || '未登录用户',
+    bio: UserStore.bio || '暂无简介',
+    id: UserStore.id || '',
+    avatar: UserStore.image || '/default-avatar.png'
+  }
+})
 </script>
 
 <style scoped lang="scss">
@@ -38,50 +38,28 @@ import { RouterLink } from 'vue-router';
 }
 
 .navigation {
-  min-width: 5rem;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.8rem 0;
-
-  background-color: variable.$primary-color;
+  @include flex-center(row);
+  width: 100%;
+  height: 4rem;
+  padding: 0.8rem 2rem;
   border-radius: variable.$md;
-  box-shadow: variable.$shadow;
-
   img {
-    width: 2.8rem;
-    height: 2.8rem;
+    cursor: pointer;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    border: 1px solid rgb(238, 238, 240);
   }
-
-  &__main {
-
-    a {
-      @include flex-center();
-      cursor: pointer;
-      width: 2.8rem;
-      height: 2.8rem;
-      background-color: variable.$background-color;
-      border-radius: 50%;
-      justify-content: center;
-      margin-bottom: 1.8rem;
-    }
-    .active {
-      background-color:variable.$text-color; 
+  &__logo {
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
     }
   }
 
-  &__social {
-    @include flex-center(column);
-
-    img {
-      margin-bottom: 1.8rem;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
+  &__user {
+    @include flex-center(row);
+    column-gap: 1rem;
   }
 }
 </style>

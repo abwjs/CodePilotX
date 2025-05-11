@@ -3,13 +3,29 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      redirect:'/home'
+    },
+    {
+      path: '/home',
       name: 'Home',
       component: () => import('@/views/HomeIndex.vue'),
       meta: {
         title: '首页',
         isLogin: true,
       },
+      children:[
+        {
+          path: '/home/userIndex',
+          name: 'User',
+          component: () => import('@/views/UserIndex.vue'),
+          meta: {
+            title: '用户中心',
+            isLogin: true,
+          },
+        },
+      ]
     },
+
     {
       path: '/user/register',
       name: 'Register',
@@ -29,15 +45,24 @@ const router = createRouter({
       },
     },
     {
-      path: '/document',
+      path: '/document/:docId',
       name: 'Document',
       component: () => import('@/views/DocumentEditor.vue'),
       children: [],
       meta: {
-        title: '注册',
-        isLogin:true
+        title: '文档',
+        isLogin: true,
       },
     },
+     {
+      path:'/mydocument',
+      name: 'MyDocument',
+      component: () => import('@/views/MyDocument.vue'),
+      meta: {
+        title: '我的文档',
+        isLogin: true,
+      },
+     }
   ],
   history: createWebHistory(),
 })

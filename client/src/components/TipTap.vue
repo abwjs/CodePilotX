@@ -1,12 +1,15 @@
 <template>
-  <div class="editor" v-if="editor" :style="{ width }">
+  <div class="editor" :style="{ width }">
     <editor-content class="editor-content" :editor="editor" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted,nextTick } from 'vue';
+import { io } from 'socket.io-client';
+import { onUnmounted, nextTick } from 'vue';
+import mitts from '../utils/bus'
 import { useEditor, EditorContent } from '@tiptap/vue-3'
+// import { useDocumentStore } from '../stores/modules/document';
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
 import Document from '@tiptap/extension-document'
@@ -14,44 +17,64 @@ import Paragraph from '@tiptap/extension-paragraph'
 import Text from '@tiptap/extension-text'
 import Heading from '@tiptap/extension-heading'
 import Collaboration from '@tiptap/extension-collaboration'
+import { useUserStore } from '../stores/modules/user';
 import * as Y from 'yjs'
-import mitts from '../utils/bus'
-import { TiptapCollabProvider } from '@hocuspocus/provider'
-const doc = new Y.Doc() // Initialize Y.Doc for shared editing
-defineProps<{
-  width: string
+const UserStore = useUserStore()
+// const DocumentStore = useDocumentStore()
+const props = defineProps<{
+  width: string,
+  docId: string
 }>()
+const ydoc = new Y.Doc()
 const editor = useEditor({
-  content: '<p>I’m running Tiptap with vue-next. 🎉</p>',
+  content: '<p>开始编辑！🎉</p>',
   extensions: [
-    StarterKit
-    , Highlight,
+    //禁止本地历史存储
+    StarterKit.configure({ history: false }),
     Document,
     Paragraph,
     Text,
+    Highlight,
     Highlight.configure({ multicolor: true }),
     Heading.configure({
-          levels: [1, 2, 3],
-        }),
-        Collaboration.configure({
-        document: doc, // Configure Y.Doc for collaboration
-      }),
-  ]
+      levels: [1, 2, 3],
+    }),
+    //绑定ydoc
+    Collaboration.configure({
+      document: ydoc,
+    }),
+  ],
 })
 nextTick(() => {
-  mitts.emit('event', editor)
+  mitts.emit('event', editor.value)
 })
-// Connect to your Collaboration server
-  onMounted(() => {
-    const provider = new TiptapCollabProvider({
-      name: 'document.name', 
-      appId: 'JKVV01DK', 
-      token: 'notoken', 
-      document: doc,
-    })
-    console.log(provider);
-    
+const socket = io(import.meta.env.VITE_APP_BASE_API
+  , {
+    auth: {
+      token: UserStore.token
+    },
+    withCredentials: true,
   })
+// 发送进入房间
+socket.emit('join-doc', props.docId)
+// 监听初始化文档
+socket.on('doc-init', (update:Uint8Array) => {
+  //应用初始化文档内容
+  if (!(update instanceof Uint8Array)) {
+    console.error('收到非二进制数据:', update)
+    return
+  }
+  Y.applyUpdate(ydoc, update)
+})
+//改变
+editor.value?.on('transaction', () => {
+  const update = Y.encodeStateAsUpdate(ydoc);
+  socket.emit('yjs-update', props.docId, update);
+});
+// 清理资源
+onUnmounted(() => {
+  socket.disconnect();
+});
 </script>
 
 <style lang="scss" scoped>

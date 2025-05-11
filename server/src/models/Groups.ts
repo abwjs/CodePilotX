@@ -5,10 +5,9 @@ const GroupsSchema = new mongoose.Schema({
     type:String,
     default:'新建文档',
   },
-  //内容
+   // Yjs 二进制快照 (Y.encodeStateAsUpdate(ydoc)) 即内容
   content: {
-    type: mongoose.Schema.Types.Mixed,
-    default: {}
+    type: Buffer, required: true
   },
   //协同用户 
   collaborators: [{
@@ -22,10 +21,14 @@ const GroupsSchema = new mongoose.Schema({
     ref: 'User',                           // 引用 User 模型
     default: []                            // 字段默认值为空数组
   },
-  //websocket会话id
-  wsSessionId:{
-    type:String,
-  }
+  // 历史版本快照
+  history: [{ type: Buffer }],
+  // // 封面
+  // cover:{
+    
+  // },
+}, {
+  timestamps: true,
 })
 const GroupsModel = mongoose.model('GroupsSchema',GroupsSchema)
 export default GroupsModel
