@@ -10,7 +10,7 @@ import { onUnmounted, nextTick } from 'vue';
 import mitts from '../utils/bus'
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 // import { useDocumentStore } from '../stores/modules/document';
-import StarterKit from '@tiptap/starter-kit'
+// import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
 import Document from '@tiptap/extension-document'
 import Paragraph from '@tiptap/extension-paragraph'
@@ -30,7 +30,7 @@ const editor = useEditor({
   content: '<p>开始编辑！🎉</p>',
   extensions: [
     //禁止本地历史存储
-    StarterKit.configure({ history: false }),
+    // StarterKit.configure({ history: false }),
     Document,
     Paragraph,
     Text,

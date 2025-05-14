@@ -54,7 +54,7 @@
             <p>您当前没有文档</p>
           </div>
         </div>
-      </div>v c 
+      </div>
     </main>
     <div class='AIDialogue' v-if="founcs">
       <AIInlineBox @closeAI="close" :Inputvalue="InputValue"></AIInlineBox>

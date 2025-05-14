@@ -10,11 +10,12 @@ export interface Document {
   _id: string;
   title: string;
   content: Uint8Array;          // 注意：实际传输使用 Base64 字符串
-  collaborators: string[];  // 协作者 ID 数组（ObjectId 字符串）
-  creator: User[];          // 包含完整用户对象的数组
+  collaborators: User[];  // 协作者 ID 数组（ObjectId 字符串）
+  creator: User;          // 包含完整用户对象的数组
   createdAt: string;        // ISO 8601 时间字符串
   updatedAt: string;
-  history?: Uint8Array[];   // 可选的历史记录（根据你的接口示例未出现）
+  history?: Uint8Array[]; 
+  cover:string  // 可选的历史记录（根据你的接口示例未出现）
 }
 
 // 如果 content 需要在前端转换

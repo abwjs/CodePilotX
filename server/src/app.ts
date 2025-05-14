@@ -20,6 +20,7 @@ app.use(express.json()); // 用来解析 json 类型请求体
 // 静态资源
 app.use('/images', express.static('uploads/images')); // 用户上传图片
 app.use('/default-image.jpg', express.static('public/default-image.jpg')); // 默认图片
+app.use('/default-Cover.png', express.static('public/default-Cover.png')); // 默认图片
 
 // 第三方日志中间件
 app.use(morgan('dev'));

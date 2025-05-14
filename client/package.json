@@ -24,6 +24,7 @@
     "@tiptap/pm": "^2.11.7",
     "@tiptap/react": "^2.11.7",
     "@tiptap/starter-kit": "^2.11.7",
+    "compressorjs": "^1.2.1",
     "install": "^0.13.0",
     "mitt": "^3.0.1",
     "npm": "^11.2.0",

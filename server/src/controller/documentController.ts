@@ -73,7 +73,7 @@ export const updateTitle = async (
   let { title, docId, userId } = req.body;
   const doc = await GroupsModel.findOne({
     _id: docId,
-    collaborators: userId,
+    creator: userId,
   });
   if (!doc) {
     res.status(400).json({
@@ -180,6 +180,32 @@ export const removeCollaborator = async (
   }
 };
 
+// 自定义封面
+export const uploadCover =  async(  req: Request,
+  res: Response,
+  next: NextFunction)=>{
+      try {
+    if (!req.file) {
+      res.status(400).json({ message: "请选择要上传的文件" });
+      return;    }
+
+    const updatedGroup = await GroupsModel.findByIdAndUpdate(
+      req.params.docId,
+      { cover: `/images/${req.file.filename}` },
+      { new: true }
+    );
+
+    res.status(200).json({
+      code: 1,
+      msg: "上传成功",
+      ...formatGroupsResponse(updatedGroup),
+    });
+  } catch (err) {
+    res.status(500).json({ error: "图片上传失败" });
+  }
+  }
+
+
 //删除文档
 export const removeDocument = async (
   req: Request,
@@ -236,13 +262,14 @@ export const getFullDocumentList = async (
         });
     }
     const docs = await GroupsModel.find(query)
-      .select("_id title updatedAt createdAt creator collaborators content") // 精确控制返回字段
+      .select("_id title cover updatedAt createdAt creator collaborators content") // 精确控制返回字段
       .populate("creator", "username image") // 只取必要用户信息
       .populate("collaborators", "username image")
       .sort({ updatedAt: -1 })
       .lean();
     // 格式化协同者的头像路径
     docs.forEach((item) => {
+      item.cover =  `http://localhost:${PORT}${item.cover}`;
       item.collaborators.map((i: any) => {
         i.image = `http://localhost:${PORT}${i.image}`;
         return i;
@@ -251,9 +278,27 @@ export const getFullDocumentList = async (
     res.status(200).json({
       code: 1,
       msg: "获取成功",
-      data: docs,
+      data: 
+        docs
+      ,
     });
   } catch (err) {
     next(err);
   }
 };
+
+
+
+
+
+// 格式化响应
+function formatGroupsResponse(groups: any) {
+  return {
+    id: groups._id,
+    title: groups.title,
+    cover: `http://localhost:${PORT}${groups.cover}`, // 拼接完整URL
+    createdAt:groups.createdAt,
+    collaborators:groups.collaborators,
+    creator:groups.creator
+  };
+}
