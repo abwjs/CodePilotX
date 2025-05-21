@@ -13,3 +13,4 @@ export interface resType {
   image:string | null
   code: number
 }
+
