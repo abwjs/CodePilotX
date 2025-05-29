@@ -48,28 +48,38 @@ const editor = useEditor({
 nextTick(() => {
   mitts.emit('event', editor.value)
 })
-const socket = io(import.meta.env.VITE_APP_BASE_API
-  , {
-    auth: {
-      token: UserStore.token
-    },
-    withCredentials: true,
-  })
+const socket = io(import.meta.env.VITE_APP_BASE_API, {
+  auth: {
+    token: UserStore.token
+  },
+  withCredentials: true
+});
+
 // 发送进入房间
 socket.emit('join-doc', props.docId)
 // 监听初始化文档
 socket.on('doc-init', (update:Uint8Array) => {
   //应用初始化文档内容
-  if (!(update instanceof Uint8Array)) {
-    console.error('收到非二进制数据:', update)
-    return
+   if (!update || update.length === 0) {
+    console.error('Received empty or invalid doc-init update');
+    return;
   }
-  Y.applyUpdate(ydoc, update)
+
+  try {
+    Y.applyUpdate(ydoc, update);
+  } catch (err) {
+    console.error('Error applying doc-init update:', err);
+  }
 })
 //改变
 editor.value?.on('transaction', () => {
+  console.log(1);
+  
+  if(!editor.value) return;
   const update = Y.encodeStateAsUpdate(ydoc);
+if(update.length>0){
   socket.emit('yjs-update', props.docId, update);
+}
 });
 // 清理资源
 onUnmounted(() => {

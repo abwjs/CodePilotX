@@ -10,6 +10,7 @@ const GroupsSchema = new mongoose.Schema(
     content: {
       type: Buffer,
       required: true,
+      subtype: 5
     },
     //协同用户
     collaborators: [

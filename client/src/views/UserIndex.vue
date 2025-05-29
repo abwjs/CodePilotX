@@ -3,7 +3,7 @@
     <div class="container">
       <div class="container__header">
         <p>用户中心</p>
-        <span @click="router.push('/home')">X</span>
+        <span @click="router.push('/')">X</span>
       </div>
       <div class="container__body">
         <!-- 头像 -->
@@ -16,13 +16,11 @@
           </div>
         </div>
         <div class="uname">
-          <h2>111</h2>
-          <!-- <h2>{{ user.name }}</h2> -->
+          <h2>{{ user.name }}</h2>
         </div>
         <div class="bio">
           <h2>个人简介</h2>
-          <!-- <p>{{ user.bio }}</p> -->
-          <p></p>
+          <p>{{ user.bio }}</p>
         </div>
         <div class="logoutBt">
           <button @click="logout">退出登录</button>

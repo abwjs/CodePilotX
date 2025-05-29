@@ -63,7 +63,8 @@ const io: SocketIOServer = new SocketIOServer(httpServer, {
     methods: ["GET", "POST"],
     allowedHeaders: ["authorization"],
     credentials: true
-  }
+  },
+  
 });
 // Socket.IO 认证中间件
 io.use((socket: Socket, next: (err?: Error) => void) => {

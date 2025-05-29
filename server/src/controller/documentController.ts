@@ -21,8 +21,9 @@ export const createDocument = async (
   }
   // 初始化 Yjs 文档
   const ydoc = new Y.Doc();
+  const initialType = ydoc.getXmlFragment('content');
+initialType.insert(0, [new Y.XmlText('开始编辑！🎉')]); 
   const initialUpdate = Y.encodeStateAsUpdate(ydoc);
-
   try {
     const newDa = await GroupsModel.create({
       collaborators: [],

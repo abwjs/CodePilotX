@@ -143,6 +143,7 @@ const sending = async () => {
 onMounted(async () => {
   if (props.Inputvalue) {
     text.value = props.Inputvalue
+    sending()
   }
 })
 
@@ -153,7 +154,6 @@ onMounted(async () => {
 @mixin flex-center($direction: row, $justify: center) {
   display: flex;
   flex-direction: $direction;
-  align-items: center;
   justify-content: $justify;
 }
 
@@ -172,6 +172,7 @@ onMounted(async () => {
   overflow: auto;
   h1 {
     font-size: 1.8rem;
+    text-align: center;
   }
 
   // 消息内容
@@ -181,7 +182,6 @@ onMounted(async () => {
     display: flex;
     flex-direction: column;
     flex: 1;
-    overflow: auto;
     gap: 2rem;
     width: 100%;
 
@@ -198,25 +198,25 @@ onMounted(async () => {
         border-radius: 50%;
         border: 0.1rem solid variable.$border-color;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
       }
 
       &__dragdrop {
         display: flex;
         align-items: center;
         padding: 1%;
-        flex: 1;
         height: 100%;
         border-radius: variable.$sm;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        flex: 1;
       }
     }
 
     //用户
     .user {
       flex-direction: row-reverse;
-      &__dragdrop {
-        flex: none;
+      .item__dragdrop {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        justify-content: flex-end;
+        
       }
     }
   }
